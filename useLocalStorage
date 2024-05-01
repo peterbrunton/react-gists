@@ -1,0 +1,41 @@
+useLocalStorage custom hook
+
+```
+import { useState, useEffect } from 'react';
+
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      return initialValue;
+    }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(storedValue));
+  }, [key, storedValue]);
+
+  return [storedValue, setStoredValue];
+}
+```
+
+
+useLocalStorage custom hook implementation
+```
+import React from 'react';
+import useLocalStorage from './useLocalStorage';
+
+function ThemeSwitcher() {
+  const [theme, setTheme] = useLocalStorage('theme', 'light');
+
+  return (
+    <div>
+      <p>Selected Theme: {theme}</p>
+      <button onClick={() => setTheme('light')}>Light Theme</button>
+      <button onClick={() => setTheme('dark')}>Dark Theme</button>
+    </div>
+  );
+}
+```
